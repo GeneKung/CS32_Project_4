@@ -1,0 +1,102 @@
+﻿1. I was able to finish the entire project.
+2. I don’t believe there are any bugs in my program.
+3. I was able to follow all the requirements for the STL’s that could and couldn’t be used in each class and was able to write my own treemultimap container.
+4.  
+I tested the user class by creating several user objects in main, passing in names, emails, and a vector of movie ID’s (from the User.txt provided) and testing the getter functions by making sure function class u.get_full_name() and u.get_email() will return the correct name and email passed in. And to test the get_watch_history() function, I created a vector in main and assigned it to u.get_watch_history() and iterated through that vector to make sure all the movie ID’s match.
+
+
+I tested the movie class by creating several movie objects in main, passing in id’s, titles, release years, a vector of directors, actors, and genres, and a rating (from the Movie.txt provided) and testing the getter functions by making calls such as m.get_id(), m.get_title(), m.get_release_year() and m.get_rating() will return the correct movie ID, title, release year, and rating. To test the getter functions get_directors(), get_actors(), and get_genres() I created 3 vectors in main and set them equal to a call to either m.get_directors, m.get_actors, and m.get_genres. Then I iterated through those 3 vectors in main making sure they have the corresponding actors, genres, and directors.
+
+
+I tested the treemm class using these simple test cases
+    TreeMultimap<std::string, int> tmm;
+    tmm.insert("carey", 5);
+    tmm.insert("carey", 6);
+    tmm.insert("carey", 7);
+    tmm.insert("david", 25);
+    tmm.insert("david", 425);
+    tmm.insert("david", 420);
+    TreeMultimap<std::string,int>::Iterator it = tmm.find("carey");
+    // prints 5, 6, and 7 in some order
+    while (it.is_valid()) {
+        std::cout << it.get_value() << std::endl;
+        it.advance();
+    }
+    std::cout << std::endl;
+    // this should print 25, 425, 420
+    it = tmm.find("david");
+    while(it.is_valid()) {
+        std::cout << it.get_value() << std::endl;
+        it.advance();
+    }
+    std::cout << std::endl;
+    // this should print "laura is not in the multimap"
+    it = tmm.find("laura");
+    if (!it.is_valid())
+        std::cout << "laura is not in the multimap!\n";
+
+
+I tested the userdatabase class using the structure below. Basically, I create a UserDatabase object, make sure that it loads, and then test the functionality of get_user_from_email(); I edited the User.txt file such that it would only contain 20 users and then got random emails from the file. Then I tested the get_user_from_email() with those random emails and created a helper function in main, printUserInfo() to print the information of the user. Then I checked to see that the user info printed out matches the user info in the text file. I made sure to do the test for all 20 emails to make sure that all 20 emails were loaded into the user database. I then did the same test but on the provided User.txt file to see how long it would take to actually load the user from such a large file.
+
+
+    UserDatabase udb;
+    if(udb.load("/Users/genekung/Desktop/CS32/P_4/P_4/Users.txt"))
+    {
+        
+        User* testUser1 = udb.get_user_from_email("RHutchins32@gmail.com");
+        printUserInfo(testUser1);
+        
+        User* testUser2 = udb.get_user_from_email("GreyKinney73108@charter.net");
+        printUserInfo(testUser2);
+         
+        etc
+    }
+
+
+I tested the moviedatabase class using the structure below. I would create a MovieDatabase object and make sure it loaded correctly. Then to test the functionality of the get_movie_from_id() function, I would pass in a random movie ID from a movie text file of say 20 movies. Then I would call a helper function printMovieInfo() that prints out the information of that movie, and I would check that the corresponding id, title, release year, genres, actors, directors, and rating match between the file and what is printed. Then to test the functionality of get_movies_with_genre(), get_movies_with_actor(), and get_movies_with_director(), I would create a vector of pointers to movies and then call the corresponding function with some arbitrary director, actor, and genre. Then I would loop through the 3 vectors and make sure the corresponding printed items match those items in the movie text file. After performing these operations on a file of 20 movies, I would move to performing it on the provided movie.txt file to test the time. 
+
+
+    MovieDatabase db;
+    if(db.load("/Users/genekung/Desktop/CS32/Movies.txt"))
+    {
+        Movie* testMovie1 = db.get_movie_from_id("ID10782");
+        printMovieInfo(testMovie1);
+        Movie* testMovie2 = db.get_movie_from_id("ID25779");
+        printMovieInfo(testMovie2);
+        cout << testMovie2->get_title() << endl;
+              
+        vector<Movie*>  moviesWithGenres = db.get_movies_with_genre("Drama");
+        for(int i = 0; i < moviesWithGenres.size(); i++)
+        {
+            cout << moviesWithGenres[i]->get_title() << endl;
+        }
+        vector<Movie*> moviesWithActors = db.get_movies_with_actor("Arnold Schwarzenegger");
+        for(int i = 0; i < moviesWithActors.size(); i++)
+        {
+            cout << moviesWithActors[i]->get_title() << endl;
+        }
+        vector<Movie*> moviesWithDirectors = db.get_movies_with_director("Arnold Schwarzenegger");
+        for(int i = 0; i < moviesWithDirectors.size(); i++)
+        {
+            cout << moviesWithDirectors[i]->get_title() << endl;
+        }
+    }
+
+
+
+
+I tested the Recommender class with the following structure. Basically, I first tested the the Results From Recommender portion of the spec in which I used the extract same user and movie text file and made sure the ranking for “climberkip@gmail.com” matched the spec’s ranked output after calling the provided findMatches(). Then, I tested on the provided large user and movie text files to test the time. I would select a random user email, and select an arbitrary number to use for the number of movies ot recommend and then see how long it takes for the ranked list to generate after calling findMatches().
+
+
+UserDatabase udb;
+MovieDatabase mdb;
+if(udb.load("/Users/genekung/Desktop/Cs32/P_4/P_4/Users.txt"))
+{
+        cout << "sucess" << endl;
+}
+if(mdb.load("/Users/genekung/Desktop/Cs32/P_4/P_4/Movies.txt"))
+{
+        cout << "sucess" << endl;
+}
+Recommender rec(udb, mdb);
+findMatches(rec, mdb, "ScRobe46@msn.com", 10);
